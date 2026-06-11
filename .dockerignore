@@ -1,0 +1,12 @@
+**/node_modules
+frontend/dist
+backend/aiqs.db
+backend/.env
+backend/storage/uploads/*
+backend/storage/exports/*
+backend/storage/paper_*
+backend/logs
+**/__pycache__
+**/*.pyc
+.git
+templates/*.pdf

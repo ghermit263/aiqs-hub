@@ -1,0 +1,149 @@
+# AIQS Hub — 智能题源中心
+
+![banner](docs/banner.svg)
+
+[English README](README.en.md) ·  许可证 MIT
+
+为现有智能组卷系统提供**题目生产、审核和导出**的前置系统：
+上传资料 → 解析切片（保留来源页码）→ AI 出题（待审核）→ 人工审核 → 标准题库 → 导出组卷系统 Excel 模板 / 组卷出 AB 卷。
+
+> **界面截图**：放在 `docs/screenshots/` 下（建议补 `dashboard.png`、`review.png`、`papers.png`、三套皮肤对比图）。
+> 抓图方法：单端口启动后浏览器打开 http://localhost:8000 ，各页面截图存入该目录，再在此处用 `![](docs/screenshots/xxx.png)` 引用。
+
+## 快速启动（本机开发）
+
+1. 双击 `启动后端.bat`（首次需 `pip install -r backend/requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple`）
+2. 双击 `启动前端.bat`（首次需在 frontend 下 `npm install --registry=https://registry.npmmirror.com`）
+3. 浏览器打开 http://127.0.0.1:5173 ，默认账号 `admin` / `admin123`（**正式使用前请改密码**）
+
+## 内网部署（分享给其它电脑）
+
+推荐**单端口模式**：FastAPI 直接托管打包后的前端，整套只占 8000 一个端口。
+
+1. 在本机双击 `一键部署（单端口）.bat`（会先 `npm run build` 打包前端，再以 `0.0.0.0:8000` 启动）
+2. 放行防火墙入站（管理员 PowerShell 跑一次即可）：
+   ```powershell
+   New-NetFirewallRule -DisplayName "AIQS Hub 8000" -Direction Inbound -Protocol TCP -LocalPort 8000 -Action Allow
+   ```
+3. 查本机内网 IP：`ipconfig`（找 IPv4，如 `192.168.1.27`）
+4. 其它电脑浏览器打开 `http://192.168.1.27:8000` 即可，无需装任何东西
+
+> 改了前端代码后需重新 `npm run build`（或重跑一键部署脚本）才会生效。
+> 开发模式下也可让别人访问 `http://<本机IP>:5173`（Vite 需 `--host`），但单端口模式更稳、更省事。
+
+## 技术栈
+
+- 后端：Python FastAPI + SQLAlchemy，默认 SQLite（`backend/aiqs.db`），设置环境变量 `DATABASE_URL` 可切 PostgreSQL
+- 前端：React + TypeScript + Vite + Ant Design
+- 解析：PyMuPDF (PDF) / python-docx / python-pptx / openpyxl / txt（自动识别UTF-8/GBK编码）/ 图片 jpg/png（RapidOCR 本地离线识别，不出网）；旧格式 .doc/.ppt/.xls 需先另存为新格式；扫描版 PDF 暂不支持
+- 导出：openpyxl，严格对齐 `templates/题库模版.xlsx`（题干|类型|答案|选项A-D）
+
+## 模型配置（model_gateway）
+
+「系统设置」页可切换，三种供应商：
+
+| provider | 说明 |
+|----------|------|
+| `mock` | 演示模式，不调用任何外部服务，生成带 [示例] 标记的样例题 |
+| `openai_compat` | OpenAI 兼容接口，覆盖 DeepSeek / 通义 / 豆包 / OpenAI / 内网 vLLM、Ollama |
+| `claude` | Anthropic 原生接口 |
+
+**内网模式**开关：开启后仅允许内网 IP 的 base_url，处理绩效/薪资等敏感资料时必须开启。
+
+⚠️ **模型名必须填服务商的准确名称**：DeepSeek 是 `deepseek-chat`（不是 `deepseek`）、通义如 `qwen-plus`、豆包用接入点 ID。
+配置后点「测试连接」验证，失败会显示服务商返回的完整错误。
+
+## 排错（出题失败时）
+
+1. 「系统设置 → 测试连接」：验证 API 地址/密钥/模型名，失败弹窗含服务商原始错误（如 Model Not Exist、余额不足）
+2. 「系统设置 → 调用与运行日志」：每次模型调用的成功/失败、耗时、token 与错误详情；「查看运行日志」可看解析/生成全链路日志
+3. 「生成任务」列表 → 失败任务点「查看错误」看完整原因（按切片列出）
+4. 日志文件：`backend/logs/app.log`（5MB 自动轮转，保留5份）
+
+## 用户与权限
+
+| 角色 | 权限 |
+|------|------|
+| 上传人 uploader | 上传资料、删除**自己**的资料、查看题目和题库 |
+| 审核人 reviewer | 上传人全部权限 + 创建生成任务 + 编辑/通过/退回/删除题目 + 导出 Excel |
+| 管理员 admin | 全部权限 + 模型配置 + 用户管理（审批注册、调角色、停用、重置密码、手工建号） |
+
+- 登录页可自助注册，注册后为**待审批**状态（默认角色上传人），管理员在「系统设置→用户管理」审批通过后方可登录
+- 所有用户登录后可在左下角自助修改密码
+
+## 题型与导出映射
+
+系统内题型：单选 / 多选 / 判断 / 填空 / 简答 / 论述。
+导出时：简答、论述 → 模板的**主观题**（参考答案放选项A列）；判断题固定 选项A=正确、B=错误；填空题各空答案依次放选项A、B…。
+
+## 目录结构
+
+```
+backend/app/
+  ├── routers/       API：auth, documents, tasks, questions, exports, settings
+  ├── services/      parsers(4种格式) / chunker / generator / exporter
+  ├── llm/           gateway + providers(mock, openai_compat, claude) + prompts
+  ├── models.py      8张表：users, documents, doc_chunks, generation_tasks,
+  │                  questions, review_logs, export_records, llm_call_logs (+app_settings)
+  └── main.py
+frontend/src/pages/  Login, Dashboard, Documents, Tasks, Review(审核工作台), Bank, Settings
+backend/tests/e2e_test.py  端到端冒烟测试（需后端运行中）
+```
+
+## 题库分类
+
+题目带 **大类 + 小类（可空）** 两级分类。大类清单：战略、党建廉洁、内部知识（建议小类：党建综合/业务服务/网络技术）、管理、企业文化、智转数改（清单在 `backend/app/schemas.py:CATEGORIES`，小类自由填写）。
+分类可在四处设置/修改：① 新建生成任务时选大类，生成的题目自动继承；② 审核工作台逐题编辑；③ 标准题库按大类筛选、查看；④ 标准题库**单独或批量修正分类**（勾选多题→「批量改分类」，或单行「改分类」）。
+
+## 试卷组卷（AB 卷）
+
+「试卷组卷」页（审核人及以上）按 **题型 × 大类 × 难度 × 数量 × 每题分值** 多行条件从标准题库随机抽题。
+流程为三步：**① 设条件 → ② 自动组卷出草稿（可微调）→ ③ 预览 / 定稿生成**。
+- **卷别可选**：仅 A 卷 或 A、B 双卷
+- 草稿阶段显示大类分布，可逐题「换题」（同题型同大类的其它题中替换）或删题
+- **预览**：定稿前/历史中均可在线预览每个卷别的排版（题号、乱序后的选项、答案），不必下载
+- 定稿生成 zip 包（含 5 个或 3 个 docx，视卷别），可下载整包，也可在历史里**单独下载某个 docx**（试卷A/答题卡A/参考答案…）方便微调
+- 文件构成：试卷A[/B]、答题卡A[/B]、参考答案（保密）
+
+## 全局换肤主题
+
+右下角侧栏可一键切换三套主题，状态存 localStorage（首次按机构默认，存于 app_settings.ui_skin）：
+
+| 主题 | 配色 | 字体 |
+|------|------|------|
+| 终端风 | 荧光绿 #39ff14 / 炭黑 #0a0e0a（暗色） | 等宽 Cascadia/Consolas |
+| 唐风 | 绛红 #8c1f28 / 赭黄 #c9962e / 石青 #2e6e8e，华丽 | 楷体 |
+| 宋风 | 青灰 #5c6b73 / 米白 #f5f1e8 / 茶褐 #4a3b2e，素雅 | 宋体 |
+
+切换覆盖：AntD 全部组件（token + 暗色/亮色算法）、配色、字体、图标、侧栏、登录页背景、代码/原文/日志块高亮、滚动条。
+实现：`frontend/src/theme.ts`（皮肤定义）+ `ThemeProvider.tsx`（ConfigProvider + CSS 变量注入）；后端 `GET/PUT /settings/theme` 存机构默认。
+
+- 样式参照 `templates/` 下的真实试卷与答题卡 PDF：封面页（标题/卷别/考场/姓名/员工编号/座位号/考场号/警示语）、
+  分数汇总表、分节题目；答题卡为 题号/答案 每组10题的表格
+- **AB 卷乱序**：同一套题，节内题目顺序与选择题选项顺序均随机重排，参考答案自动映射（已测试验证）
+- 页面实时显示各题型×难度的题库可用量，不足会标红并在提交时拦截
+
+## 开源到 GitHub
+
+仓库已带 `.gitignore` / `backend/.env.example` / `LICENSE`(MIT)。**提交前务必确认不泄露敏感数据**：
+
+1. ⚠️ **先轮换密钥**：`backend/aiqs.db` 里存了你在设置页填的 DeepSeek API Key。该库已被 `.gitignore` 排除，但建议把那个 Key 在 DeepSeek 后台**作废重发**一个，杜绝历史泄露风险。
+2. 确认 `.gitignore` 生效后再提交：
+   ```bash
+   cd "D:/OpenClaw/CC/AIQS Hub"
+   git init
+   git add .
+   git status            # 检查列表里【没有】aiqs.db / .env / storage/ / logs/
+   git commit -m "init: AIQS Hub 智能题源中心"
+   gh repo create aiqs-hub --public --source=. --push   # 或在网页建库后 git remote add + push
+   ```
+3. 让它更适合分享的建议：
+   - **改默认口令**：`app/main.py` 里首次启动建的 `admin/admin123` 仅作初始化，README 已提示首次登录改密
+   - **大类清单**本项目内置的是中国移动的分类（`backend/app/schemas.py:CATEGORIES`），对外开源可改成通用示例或做成可配置
+   - **导出模板** `templates/题库模版.xlsx` 是适配特定组卷系统的，README 里说明字段含义即可
+   - 补一张界面截图、一个 `docker-compose.yml`（可选）能进一步降低他人上手门槛——需要的话我可以加
+
+## 二期预留
+
+- API 对接组卷系统（导出模块已独立，加 router 即可）
+- 扫描 PDF OCR、Celery 任务队列、pg_trgm 查重（现为 difflib）、多用户管理界面

@@ -1,0 +1,61 @@
+:root {
+  /* 默认值，ThemeProvider 会按皮肤覆盖 */
+  --ths-bg: #f5f5f5;
+  --ths-panel: #ffffff;
+  --ths-text: #333;
+  --ths-muted: #888;
+  --ths-accent: #1677ff;
+  --ths-border: #e0e0e0;
+  --ths-code-bg: #1e1e1e;
+  --ths-code-text: #d4d4d4;
+  --ths-code-keyword: #569cd6;
+  --ths-login-bg: #f5f5f5;
+  --ths-scrollbar: #ccc;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+  background: var(--ths-bg);
+  color: var(--ths-text);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* 各皮肤的正文字体（AntD 组件由 token 控制，这里覆盖纯 body 文本与标题） */
+:root[data-skin='terminal'] body {
+  font-family: 'Cascadia Code', 'Consolas', 'JetBrains Mono', monospace;
+}
+:root[data-skin='tang'] body {
+  font-family: 'STKaiti', 'KaiTi', '楷体', 'Noto Serif SC', serif;
+}
+:root[data-skin='song'] body {
+  font-family: 'Songti SC', 'STSong', 'SimSun', '宋体', 'Noto Serif SC', serif;
+}
+
+/* 代码 / 原文 / 日志块：统一走主题变量，实现“代码高亮”随皮肤切换 */
+.ths-code {
+  background: var(--ths-code-bg);
+  color: var(--ths-code-text);
+  border: 1px solid var(--ths-border);
+  border-radius: 4px;
+  padding: 12px;
+  font-family: 'Cascadia Code', 'Consolas', monospace;
+  font-size: 13px;
+  white-space: pre-wrap;
+  overflow: auto;
+}
+.ths-code .kw { color: var(--ths-code-keyword); font-weight: 600; }
+
+/* 登录页背景随皮肤变化 */
+.ths-login {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--ths-login-bg);
+}
+
+/* 滚动条配色 */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: var(--ths-scrollbar); border-radius: 5px; }
+::-webkit-scrollbar-track { background: transparent; }

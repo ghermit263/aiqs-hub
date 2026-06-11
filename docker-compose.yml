@@ -1,0 +1,23 @@
+services:
+  aiqs:
+    build: .
+    image: aiqs-hub
+    container_name: aiqs-hub
+    ports:
+      - "8000:8000"
+    environment:
+      # 生产务必改成随机串
+      JWT_SECRET: ${JWT_SECRET:-please-change-me}
+      # 数据库放到挂载卷里，容器重建不丢数据
+      DATABASE_URL: sqlite:////app/backend/storage/aiqs.db
+      # 模型默认 mock；接真实模型在“系统设置”页配置或用下面三项
+      LLM_PROVIDER: ${LLM_PROVIDER:-mock}
+      LLM_BASE_URL: ${LLM_BASE_URL:-}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      LLM_MODEL: ${LLM_MODEL:-}
+      # 本单位题库大类（逗号分隔）
+      CATEGORIES: ${CATEGORIES:-公共基础,专业知识,法律法规,安全生产,业务技能,管理知识}
+    volumes:
+      # 数据库 / 上传资料 / 导出文件持久化到宿主机 ./data
+      - ./data:/app/backend/storage
+    restart: unless-stopped
