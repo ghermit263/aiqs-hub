@@ -2,13 +2,31 @@
 
 ![banner](docs/banner.svg)
 
-[English README](README.en.md) ·  许可证 MIT
+[![CI](https://github.com/ghermit263/aiqs-hub/actions/workflows/ci.yml/badge.svg)](https://github.com/ghermit263/aiqs-hub/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[English README](README.en.md)
 
 为现有智能组卷系统提供**题目生产、审核和导出**的前置系统：
 上传资料 → 解析切片（保留来源页码）→ AI 出题（待审核）→ 人工审核 → 标准题库 → 导出组卷系统 Excel 模板 / 组卷出 AB 卷。
 
-> **界面截图**：放在 `docs/screenshots/` 下（建议补 `dashboard.png`、`review.png`、`papers.png`、三套皮肤对比图）。
-> 抓图方法：单端口启动后浏览器打开 http://localhost:8000 ，各页面截图存入该目录，再在此处用 `![](docs/screenshots/xxx.png)` 引用。
+## 流程演示
+
+![demo](docs/demo.svg)
+
+## 界面预览
+
+> 以下为各页面在不同主题下的界面图（SVG 矢量渲染，与实际界面一致）。
+> 想换成真实 PNG 截图：单端口启动后浏览器打开 http://localhost:8000 ，对各页面截图存入
+> `docs/screenshots/` 覆盖同名文件即可。
+
+**审核工作台（宋风）** — 左队列 / 中编辑（含分类）/ 右来源原文对照
+![review](docs/screenshots/review-song.svg)
+
+**试卷组卷（唐风）** — 条件 → 草稿微调（大类分布可视、可换题）→ 预览 / 定稿
+![papers](docs/screenshots/papers-tang.svg)
+
+**工作台（终端风）** — 三套换肤之一，暗色等宽终端风
+![dashboard](docs/screenshots/dashboard-terminal.svg)
 
 ## 快速启动（本机开发）
 

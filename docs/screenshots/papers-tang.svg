@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" font-family="'STKaiti','KaiTi',serif">
+  <rect width="960" height="560" fill="#f3e3c4"/>
+  <!-- sider -->
+  <rect width="180" height="560" fill="#6e1620"/>
+  <text x="90" y="40" text-anchor="middle" font-size="17" fill="#f0d9b5" font-weight="700">智能题源中心</text>
+  <g font-size="13" fill="#f0d9b5">
+    <text x="24" y="86">▢ 工作台</text>
+    <text x="24" y="120">▢ 资料管理</text>
+    <text x="24" y="154">▢ 生成任务</text>
+    <text x="24" y="188">▢ 审核工作台</text>
+    <rect x="8" y="204" width="164" height="30" rx="5" fill="#c9962e"/>
+    <text x="24" y="224" fill="#3a261f" font-weight="700">▣ 试卷组卷</text>
+    <text x="24" y="258">▢ 标准题库</text>
+    <text x="24" y="292">▢ 系统设置</text>
+  </g>
+  <!-- header -->
+  <text x="200" y="44" font-size="20" fill="#3a261f" font-weight="700">试卷组卷</text>
+  <!-- card 1: criteria -->
+  <rect x="200" y="60" width="742" height="160" rx="8" fill="#fcf6e9" stroke="#d8b98a"/>
+  <text x="216" y="86" font-size="13" fill="#8c1f28" font-weight="700">① 组卷条件</text>
+  <g font-size="11.5">
+    <rect x="216" y="98" width="300" height="26" rx="4" fill="#fff" stroke="#d8b98a"/><text x="226" y="115" fill="#3a261f">葫芦岛移动职级调整考试</text>
+    <rect x="524" y="98" width="140" height="26" rx="4" fill="#fff" stroke="#d8b98a"/><text x="534" y="115" fill="#8a6a4a">第三考场</text>
+    <!-- row -->
+    <rect x="216" y="134" width="74" height="26" rx="4" fill="#fff" stroke="#d8b98a"/><text x="226" y="151" fill="#3a261f">单选题</text>
+    <rect x="296" y="134" width="80" height="26" rx="4" fill="#fff" stroke="#d8b98a"/><text x="306" y="151" fill="#3a261f">战略</text>
+    <rect x="382" y="134" width="64" height="26" rx="4" fill="#fff" stroke="#d8b98a"/><text x="392" y="151" fill="#3a261f">中等</text>
+    <rect x="452" y="134" width="96" height="26" rx="4" fill="#fff" stroke="#d8b98a"/><text x="462" y="151" fill="#3a261f">数量 30</text>
+    <rect x="554" y="134" width="96" height="26" rx="4" fill="#fff" stroke="#d8b98a"/><text x="564" y="151" fill="#3a261f">分值 1</text>
+    <text x="664" y="151" fill="#5a7d4f">可用 42 道</text>
+    <!-- footer -->
+    <text x="216" y="190" fill="#3a261f" font-weight="700" font-size="12">合计：50 题 / 满分 70 分</text>
+    <rect x="430" y="176" width="120" height="28" rx="5" fill="#fff" stroke="#2e6e8e"/><text x="490" y="195" text-anchor="middle" fill="#2e6e8e" font-size="12">仅A卷 | A、B双卷</text>
+    <rect x="560" y="176" width="150" height="28" rx="5" fill="#8c1f28"/><text x="635" y="195" text-anchor="middle" fill="#fff" font-size="12">自动组卷（生成草稿）</text>
+  </g>
+  <!-- card 2: draft -->
+  <rect x="200" y="232" width="742" height="300" rx="8" fill="#fcf6e9" stroke="#d8b98a"/>
+  <text x="216" y="258" font-size="13" fill="#8c1f28" font-weight="700">② 草稿微调 <tspan font-size="11" fill="#8a6a4a">（50 题 / 满分 70 分）</tspan></text>
+  <g font-size="12">
+    <rect x="690" y="244" width="64" height="26" rx="5" fill="#fff" stroke="#c9962e"/><text x="722" y="261" text-anchor="middle" fill="#8c1f28">预览</text>
+    <rect x="762" y="244" width="166" height="26" rx="5" fill="#8c1f28"/><text x="845" y="261" text-anchor="middle" fill="#fff">定稿生成 AB 卷</text>
+  </g>
+  <g font-size="11.5">
+    <text x="216" y="288" fill="#3a261f" font-weight="700">大类分布：</text>
+    <rect x="288" y="277" width="70" height="18" rx="9" fill="#2e6e8e"/><text x="323" y="290" text-anchor="middle" fill="#fff" font-size="10">战略 × 30</text>
+    <rect x="366" y="277" width="84" height="18" rx="9" fill="#2e6e8e"/><text x="408" y="290" text-anchor="middle" fill="#fff" font-size="10">党建廉洁 × 12</text>
+    <rect x="458" y="277" width="70" height="18" rx="9" fill="#2e6e8e"/><text x="493" y="290" text-anchor="middle" fill="#fff" font-size="10">管理 × 8</text>
+  </g>
+  <line x1="216" y1="306" x2="926" y2="306" stroke="#e3cfa6"/>
+  <text x="216" y="324" font-size="12" fill="#3a261f" font-weight="700">单选题（30 题）</text>
+  <g font-size="11.5" fill="#3a261f">
+    <rect x="216" y="334" width="56" height="18" rx="9" fill="#f0e0c0"/><text x="244" y="347" text-anchor="middle" fill="#6e1620" font-size="10">战略</text>
+    <text x="280" y="347">1. 国资央企在建设现代化产业体系中发挥以下哪项三个主要作用？</text>
+    <text x="836" y="347" fill="#2e6e8e">换题 ⟳</text>
+    <rect x="216" y="360" width="56" height="18" rx="9" fill="#f0e0c0"/><text x="244" y="373" text-anchor="middle" fill="#6e1620" font-size="10">战略</text>
+    <text x="280" y="373">2. 推动东北振兴的"三篇大文章"是指？</text>
+    <text x="836" y="373" fill="#2e6e8e">换题 ⟳</text>
+    <rect x="216" y="386" width="56" height="18" rx="9" fill="#f0e0c0"/><text x="244" y="399" text-anchor="middle" fill="#6e1620" font-size="10">战略</text>
+    <text x="280" y="399">3. 加快三转的过程中，以下哪一项描述是错误的？</text>
+    <text x="836" y="399" fill="#2e6e8e">换题 ⟳</text>
+  </g>
+  <text x="216" y="430" font-size="12" fill="#3a261f" font-weight="700">多选题（12 题）</text>
+  <g font-size="11.5" fill="#3a261f">
+    <rect x="216" y="440" width="56" height="18" rx="9" fill="#f0e0c0"/><text x="244" y="453" text-anchor="middle" fill="#6e1620" font-size="10">管理</text>
+    <text x="280" y="453">1. 下面属于战略价值的有哪几项？</text>
+    <text x="836" y="453" fill="#2e6e8e">换题 ⟳</text>
+  </g>
+</svg>

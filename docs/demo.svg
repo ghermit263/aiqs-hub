@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="360" viewBox="0 0 860 360" font-family="'Segoe UI','Microsoft YaHei',sans-serif">
+  <rect width="860" height="360" rx="14" fill="#101418"/>
+  <text x="32" y="46" fill="#e8eef2" font-size="22" font-weight="700">AIQS Hub · 流程演示</text>
+  <text x="32" y="72" fill="#8aa0ad" font-size="14">上传资料 → AI 出题 → 人工审核 → 标准题库 → 组卷出 AB 卷</text>
+
+  <!-- 五步管线 -->
+  <g font-size="14" font-weight="600">
+    <!-- 连接线 -->
+    <line x1="120" y1="150" x2="740" y2="150" stroke="#2a3640" stroke-width="3"/>
+    <!-- 节点 -->
+    <g>
+      <circle cx="120" cy="150" r="34" fill="#1b2530" stroke="#3a4a56" stroke-width="2"/>
+      <circle cx="120" cy="150" r="34" fill="#39ff14" opacity="0">
+        <animate attributeName="opacity" values="0;0.85;0.85;0" keyTimes="0;0.05;0.18;0.2" dur="10s" repeatCount="indefinite"/>
+      </circle>
+      <text x="120" y="155" text-anchor="middle" fill="#cfe0ea">上传</text>
+    </g>
+    <g>
+      <circle cx="275" cy="150" r="34" fill="#1b2530" stroke="#3a4a56" stroke-width="2"/>
+      <circle cx="275" cy="150" r="34" fill="#39ff14" opacity="0">
+        <animate attributeName="opacity" values="0;0;0.85;0.85;0" keyTimes="0;0.2;0.25;0.38;0.4" dur="10s" repeatCount="indefinite"/>
+      </circle>
+      <text x="275" y="155" text-anchor="middle" fill="#cfe0ea">出题</text>
+    </g>
+    <g>
+      <circle cx="430" cy="150" r="34" fill="#1b2530" stroke="#3a4a56" stroke-width="2"/>
+      <circle cx="430" cy="150" r="34" fill="#39ff14" opacity="0">
+        <animate attributeName="opacity" values="0;0;0.85;0.85;0" keyTimes="0;0.4;0.45;0.58;0.6" dur="10s" repeatCount="indefinite"/>
+      </circle>
+      <text x="430" y="155" text-anchor="middle" fill="#cfe0ea">审核</text>
+    </g>
+    <g>
+      <circle cx="585" cy="150" r="34" fill="#1b2530" stroke="#3a4a56" stroke-width="2"/>
+      <circle cx="585" cy="150" r="34" fill="#39ff14" opacity="0">
+        <animate attributeName="opacity" values="0;0;0.85;0.85;0" keyTimes="0;0.6;0.65;0.78;0.8" dur="10s" repeatCount="indefinite"/>
+      </circle>
+      <text x="585" y="155" text-anchor="middle" fill="#cfe0ea">题库</text>
+    </g>
+    <g>
+      <circle cx="740" cy="150" r="34" fill="#1b2530" stroke="#3a4a56" stroke-width="2"/>
+      <circle cx="740" cy="150" r="34" fill="#39ff14" opacity="0">
+        <animate attributeName="opacity" values="0;0;0.85;0.85;0" keyTimes="0;0.8;0.85;0.98;1" dur="10s" repeatCount="indefinite"/>
+      </circle>
+      <text x="740" y="155" text-anchor="middle" fill="#cfe0ea">组卷</text>
+    </g>
+  </g>
+
+  <!-- 字幕条 -->
+  <rect x="32" y="222" width="796" height="60" rx="10" fill="#0a0e12" stroke="#22303a"/>
+  <text x="52" y="258" font-size="15" fill="#39ff14" font-family="'Consolas',monospace">
+    <tspan>$ </tspan><tspan fill="#cfe0ea">解析 PDF/Word/PPT/Excel/TXT/图片(本地OCR)，保留来源页码</tspan>
+    <animate attributeName="opacity" values="1;1;0;0;0;0;0;0;0;0;1" keyTimes="0;0.18;0.2;0.3;0.4;0.5;0.6;0.7;0.8;0.98;1" dur="10s" repeatCount="indefinite"/>
+  </text>
+  <text x="52" y="258" font-size="15" fill="#e3ff5c" font-family="'Consolas',monospace" opacity="0">
+    <tspan>▸ </tspan><tspan fill="#cfe0ea">大模型按题型/大类/难度生成题目，自动进入待审核</tspan>
+    <animate attributeName="opacity" values="0;0;1;1;0;0;0;0;0;0;0" keyTimes="0;0.2;0.25;0.38;0.4;0.5;0.6;0.7;0.8;0.9;1" dur="10s" repeatCount="indefinite"/>
+  </text>
+  <text x="52" y="258" font-size="15" fill="#5cd6ff" font-family="'Consolas',monospace" opacity="0">
+    <tspan>✎ </tspan><tspan fill="#cfe0ea">审核台对照原文逐题编辑 / 通过 / 退回，全程留痕</tspan>
+    <animate attributeName="opacity" values="0;0;0;0;1;1;0;0;0;0;0" keyTimes="0;0.2;0.4;0.45;0.5;0.58;0.6;0.7;0.8;0.9;1" dur="10s" repeatCount="indefinite"/>
+  </text>
+  <text x="52" y="258" font-size="15" fill="#9d8cff" font-family="'Consolas',monospace" opacity="0">
+    <tspan>▦ </tspan><tspan fill="#cfe0ea">标准题库按大类筛选 / 批量归类 / 一键导出 Excel</tspan>
+    <animate attributeName="opacity" values="0;0;0;0;0;0;1;1;0;0;0" keyTimes="0;0.2;0.4;0.6;0.65;0.7;0.72;0.78;0.8;0.9;1" dur="10s" repeatCount="indefinite"/>
+  </text>
+  <text x="52" y="258" font-size="15" fill="#ff8f5c" font-family="'Consolas',monospace" opacity="0">
+    <tspan>⎙ </tspan><tspan fill="#cfe0ea">按条件抽题 → 预览 → 定稿 AB 卷(题序+选项乱序) docx</tspan>
+    <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;1;1;0" keyTimes="0;0.2;0.4;0.6;0.7;0.78;0.8;0.84;0.86;0.98;1" dur="10s" repeatCount="indefinite"/>
+  </text>
+
+  <!-- 换肤色板（循环高亮） -->
+  <g transform="translate(32,308)">
+    <text x="0" y="16" font-size="13" fill="#8aa0ad">三套换肤：</text>
+    <rect x="78" y="2" width="92" height="22" rx="11" fill="#39ff14"/><text x="124" y="18" text-anchor="middle" font-size="12" fill="#0a0e0a" font-weight="600">终端风</text>
+    <rect x="180" y="2" width="92" height="22" rx="11" fill="#c9962e"/><text x="226" y="18" text-anchor="middle" font-size="12" fill="#6e1620" font-weight="600">唐风</text>
+    <rect x="282" y="2" width="92" height="22" rx="11" fill="#e9e3d5"/><text x="328" y="18" text-anchor="middle" font-size="12" fill="#4a3b2e" font-weight="600">宋风</text>
+    <rect x="78" y="0" width="296" height="26" rx="13" fill="none" stroke="#fff" stroke-width="2" opacity="0">
+      <animate attributeName="x" values="78;180;282;78" keyTimes="0;0.33;0.66;1" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="width" values="92;92;92;92" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.9;0.9;0.9;0.9" dur="6s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+</svg>

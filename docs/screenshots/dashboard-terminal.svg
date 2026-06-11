@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" font-family="'Cascadia Code','Consolas',monospace">
+  <rect width="960" height="520" fill="#0a0e0a"/>
+  <!-- sider -->
+  <rect width="180" height="520" fill="#070b07"/>
+  <text x="90" y="40" text-anchor="middle" font-size="15" fill="#39ff14" font-weight="700">智能题源中心</text>
+  <g font-size="12" fill="#7fdc91">
+    <rect x="8" y="70" width="164" height="28" rx="4" fill="#11401a"/>
+    <text x="22" y="89" fill="#39ff14" font-weight="700">▣ 工作台</text>
+    <text x="22" y="120">▢ 资料管理</text>
+    <text x="22" y="150">▢ 生成任务</text>
+    <text x="22" y="180">▢ 审核工作台</text>
+    <text x="22" y="210">▢ 试卷组卷</text>
+    <text x="22" y="240">▢ 标准题库</text>
+    <text x="22" y="270">▢ 系统设置</text>
+  </g>
+  <!-- header -->
+  <text x="200" y="44" font-size="20" fill="#c8facc" font-weight="700">工作台</text>
+  <!-- stat cards -->
+  <g>
+    <rect x="200" y="64" width="176" height="92" rx="8" fill="#0e140e" stroke="#1d3a1d"/>
+    <text x="216" y="92" font-size="12" fill="#6f9c79">资料总数</text>
+    <text x="216" y="130" font-size="32" fill="#39ff14" font-weight="700">36</text>
+    <rect x="388" y="64" width="176" height="92" rx="8" fill="#0e140e" stroke="#1d3a1d"/>
+    <text x="404" y="92" font-size="12" fill="#6f9c79">待审核题目</text>
+    <text x="404" y="130" font-size="32" fill="#e3ff5c" font-weight="700">28</text>
+    <rect x="576" y="64" width="176" height="92" rx="8" fill="#0e140e" stroke="#1d3a1d"/>
+    <text x="592" y="92" font-size="12" fill="#6f9c79">标准题库</text>
+    <text x="592" y="130" font-size="32" fill="#39ff14" font-weight="700">214</text>
+    <rect x="764" y="64" width="176" height="92" rx="8" fill="#0e140e" stroke="#1d3a1d"/>
+    <text x="780" y="92" font-size="12" fill="#6f9c79">已退回</text>
+    <text x="780" y="130" font-size="32" fill="#ff5c5c" font-weight="700">9</text>
+  </g>
+  <!-- flow card -->
+  <rect x="200" y="172" width="740" height="316" rx="8" fill="#0e140e" stroke="#1d3a1d"/>
+  <text x="216" y="200" font-size="13" fill="#39ff14" font-weight="700">使用流程</text>
+  <g font-size="13" fill="#8cff9e">
+    <text x="224" y="238">1. 资料管理 上传 PDF / Word / PPT / Excel / TXT / 图片(OCR)，自动解析切片</text>
+    <text x="224" y="278">2. 生成任务 选资料、题型数量、大类，AI 出题（进入待审核）</text>
+    <text x="224" y="318">3. 审核工作台 对照原文逐题编辑、通过或退回</text>
+    <text x="224" y="358">4. 标准题库 按大类筛选 / 批量归类 / 导出 Excel</text>
+    <text x="224" y="398">5. 试卷组卷 按题型×大类×难度抽题 → 预览 → 定稿 AB 卷(docx)</text>
+  </g>
+  <rect x="216" y="424" width="708" height="44" rx="6" fill="#050805" stroke="#1d3a1d"/>
+  <text x="228" y="451" font-size="12" fill="#39ff14">model_gateway ▸ deepseek-chat ✓  | 内网模式: ON  | 三套换肤: 终端|唐|宋</text>
+</svg>
