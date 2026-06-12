@@ -15,9 +15,7 @@
 
 ## 界面预览
 
-> 以下为各页面在不同主题下的界面图（SVG 矢量渲染，与实际界面一致）。
-> 想换成真实 PNG 截图：单端口启动后浏览器打开 http://localhost:8000 ，对各页面截图存入
-> `docs/screenshots/` 覆盖同名文件即可。
+> 各页面在不同主题下的界面预览。
 
 **审核工作台（宋风）** — 左队列 / 中编辑（含分类）/ 右来源原文对照
 ![review](docs/screenshots/review-song.svg)
@@ -43,8 +41,8 @@
    ```powershell
    New-NetFirewallRule -DisplayName "AIQS Hub 8000" -Direction Inbound -Protocol TCP -LocalPort 8000 -Action Allow
    ```
-3. 查本机内网 IP：`ipconfig`（找 IPv4，如 `192.168.1.27`）
-4. 其它电脑浏览器打开 `http://192.168.1.27:8000` 即可，无需装任何东西
+3. 查本机内网 IP：`ipconfig`（找 IPv4，形如 `192.168.x.x`）
+4. 其它电脑浏览器打开 `http://<本机IP>:8000` 即可，无需装任何东西
 
 > 改了前端代码后需重新 `npm run build`（或重跑一键部署脚本）才会生效。
 > 开发模式下也可让别人访问 `http://<本机IP>:5173`（Vite 需 `--host`），但单端口模式更稳、更省事。
@@ -54,7 +52,7 @@
 - 后端：Python FastAPI + SQLAlchemy，默认 SQLite（`backend/aiqs.db`），设置环境变量 `DATABASE_URL` 可切 PostgreSQL
 - 前端：React + TypeScript + Vite + Ant Design
 - 解析：PyMuPDF (PDF) / python-docx / python-pptx / openpyxl / txt（自动识别UTF-8/GBK编码）/ 图片 jpg/png（RapidOCR 本地离线识别，不出网）；旧格式 .doc/.ppt/.xls 需先另存为新格式；扫描版 PDF 暂不支持
-- 导出：openpyxl，严格对齐 `templates/题库模版.xlsx`（题干|类型|答案|选项A-D）
+- 导出：openpyxl，对齐组卷系统导入模板（题干|类型|答案|选项A-D），示例见 `templates/sample_import_template.xlsx`
 
 ## 模型配置（model_gateway）
 
@@ -66,7 +64,7 @@
 | `openai_compat` | OpenAI 兼容接口，覆盖 DeepSeek / 通义 / 豆包 / OpenAI / 内网 vLLM、Ollama |
 | `claude` | Anthropic 原生接口 |
 
-**内网模式**开关：开启后仅允许内网 IP 的 base_url，处理绩效/薪资等敏感资料时必须开启。
+**内网模式**开关：开启后仅允许内网 IP 的 base_url，处理敏感资料时建议开启。
 
 ⚠️ **模型名必须填服务商的准确名称**：DeepSeek 是 `deepseek-chat`（不是 `deepseek`）、通义如 `qwen-plus`、豆包用接入点 ID。
 配置后点「测试连接」验证，失败会显示服务商返回的完整错误。
@@ -98,19 +96,19 @@
 
 ```
 backend/app/
-  ├── routers/       API：auth, documents, tasks, questions, exports, settings
-  ├── services/      parsers(4种格式) / chunker / generator / exporter
+  ├── routers/       API：auth, users, documents, tasks, questions, exports, papers, settings
+  ├── services/      parsers(pdf/docx/pptx/xlsx/txt/image) / chunker / generator / exporter / paper
   ├── llm/           gateway + providers(mock, openai_compat, claude) + prompts
-  ├── models.py      8张表：users, documents, doc_chunks, generation_tasks,
-  │                  questions, review_logs, export_records, llm_call_logs (+app_settings)
-  └── main.py
-frontend/src/pages/  Login, Dashboard, Documents, Tasks, Review(审核工作台), Bank, Settings
-backend/tests/e2e_test.py  端到端冒烟测试（需后端运行中）
+  ├── models.py      users, documents, doc_chunks, generation_tasks, questions,
+  │                  review_logs, export_records, llm_call_logs, papers, app_settings
+  └── main.py        含单端口托管前端 dist
+frontend/src/pages/  Login, Dashboard, Documents, Tasks, Review(审核工作台), Papers(组卷), Bank, Settings
+backend/tests/       端到端冒烟测试（需后端运行中）
 ```
 
 ## 题库分类
 
-题目带 **大类 + 小类（可空）** 两级分类。大类清单：战略、党建廉洁、内部知识（建议小类：党建综合/业务服务/网络技术）、管理、企业文化、智转数改（清单在 `backend/app/schemas.py:CATEGORIES`，小类自由填写）。
+题目带 **大类 + 小类（可空）** 两级分类。大类清单可配置（环境变量 `CATEGORIES` / `SUBCATEGORIES_JSON`；默认为通用示例：公共基础、专业知识、法律法规、安全生产、业务技能、管理知识），小类自由填写。
 分类可在四处设置/修改：① 新建生成任务时选大类，生成的题目自动继承；② 审核工作台逐题编辑；③ 标准题库按大类筛选、查看；④ 标准题库**单独或批量修正分类**（勾选多题→「批量改分类」，或单行「改分类」）。
 
 ## 试卷组卷（AB 卷）
@@ -121,7 +119,10 @@ backend/tests/e2e_test.py  端到端冒烟测试（需后端运行中）
 - 草稿阶段显示大类分布，可逐题「换题」（同题型同大类的其它题中替换）或删题
 - **预览**：定稿前/历史中均可在线预览每个卷别的排版（题号、乱序后的选项、答案），不必下载
 - 定稿生成 zip 包（含 5 个或 3 个 docx，视卷别），可下载整包，也可在历史里**单独下载某个 docx**（试卷A/答题卡A/参考答案…）方便微调
-- 文件构成：试卷A[/B]、答题卡A[/B]、参考答案（保密）
+- 文件构成：试卷A[/B]、答题卡A[/B]、参考答案（含评分参考）
+- 试卷版式：封面页（标题 / 卷别 / 考场 / 考生信息 / 警示语）→ 分数汇总表 → 分节题目；答题卡为「题号/答案」每组 10 题的表格
+- **AB 卷乱序**：同一套题，节内题序与选择题选项均随机重排，参考答案自动映射
+- 页面实时显示各题型×大类的题库可用量，不足标红并在提交时拦截
 
 ## 全局换肤主题
 
@@ -136,32 +137,7 @@ backend/tests/e2e_test.py  端到端冒烟测试（需后端运行中）
 切换覆盖：AntD 全部组件（token + 暗色/亮色算法）、配色、字体、图标、侧栏、登录页背景、代码/原文/日志块高亮、滚动条。
 实现：`frontend/src/theme.ts`（皮肤定义）+ `ThemeProvider.tsx`（ConfigProvider + CSS 变量注入）；后端 `GET/PUT /settings/theme` 存机构默认。
 
-- 样式参照 `templates/` 下的真实试卷与答题卡 PDF：封面页（标题/卷别/考场/姓名/员工编号/座位号/考场号/警示语）、
-  分数汇总表、分节题目；答题卡为 题号/答案 每组10题的表格
-- **AB 卷乱序**：同一套题，节内题目顺序与选择题选项顺序均随机重排，参考答案自动映射（已测试验证）
-- 页面实时显示各题型×难度的题库可用量，不足会标红并在提交时拦截
-
-## 开源到 GitHub
-
-仓库已带 `.gitignore` / `backend/.env.example` / `LICENSE`(MIT)。**提交前务必确认不泄露敏感数据**：
-
-1. ⚠️ **先轮换密钥**：`backend/aiqs.db` 里存了你在设置页填的 DeepSeek API Key。该库已被 `.gitignore` 排除，但建议把那个 Key 在 DeepSeek 后台**作废重发**一个，杜绝历史泄露风险。
-2. 确认 `.gitignore` 生效后再提交：
-   ```bash
-   cd "D:/OpenClaw/CC/AIQS Hub"
-   git init
-   git add .
-   git status            # 检查列表里【没有】aiqs.db / .env / storage/ / logs/
-   git commit -m "init: AIQS Hub 智能题源中心"
-   gh repo create aiqs-hub --public --source=. --push   # 或在网页建库后 git remote add + push
-   ```
-3. 让它更适合分享的建议：
-   - **改默认口令**：`app/main.py` 里首次启动建的 `admin/admin123` 仅作初始化，README 已提示首次登录改密
-   - **大类清单**本项目内置的是中国移动的分类（`backend/app/schemas.py:CATEGORIES`），对外开源可改成通用示例或做成可配置
-   - **导出模板** `templates/题库模版.xlsx` 是适配特定组卷系统的，README 里说明字段含义即可
-   - 补一张界面截图、一个 `docker-compose.yml`（可选）能进一步降低他人上手门槛——需要的话我可以加
-
-## 二期预留
+## 路线图
 
 - API 对接组卷系统（导出模块已独立，加 router 即可）
 - 扫描 PDF OCR、Celery 任务队列、pg_trgm 查重（现为 difflib）、多用户管理界面
