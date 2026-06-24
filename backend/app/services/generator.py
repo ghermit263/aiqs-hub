@@ -5,7 +5,7 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 
 from ..database import SessionLocal
-from ..llm.gateway import build_provider, call_llm, extract_json
+from ..llm.gateway import build_provider, call_llm, extract_json, get_custom_guidance
 from ..logger import logger
 from ..llm.prompts import SYSTEM_PROMPT, TYPE_LABELS, build_user_prompt
 from ..models import DocChunk, GenerationTask, Question
@@ -97,6 +97,11 @@ def run_generation_task(task_id: int) -> None:
         difficulty = task.config.get("difficulty", "medium")
         category = task.config.get("category", "")
         subcategory = task.config.get("subcategory", "")
+        # 通用干扰策略已写入 SYSTEM_PROMPT；本单位非通用指引按需追加
+        guidance = get_custom_guidance(db)
+        system_prompt = SYSTEM_PROMPT
+        if guidance:
+            system_prompt += f"\n\n# 本单位补充命题指引（务必遵守，仍以所给原文为准）\n{guidance}"
         saved = 0
         errors: list[str] = []
 
@@ -105,7 +110,7 @@ def run_generation_task(task_id: int) -> None:
                 continue
             prompt = build_user_prompt(chunk.content, chunk.source_locator, counts, difficulty)
             try:
-                raw = call_llm(db, SYSTEM_PROMPT, prompt, task_id=task.id)
+                raw = call_llm(db, system_prompt, prompt, task_id=task.id)
                 data = extract_json(raw)
             except Exception as e:  # noqa: BLE001
                 errors.append(f"切片[{chunk.source_locator}]: {e}")

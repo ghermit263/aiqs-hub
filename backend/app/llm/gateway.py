@@ -27,21 +27,58 @@ PROVIDERS: dict[str, type[LLMProvider]] = {
 }
 
 
+def _get(db: Session, key: str) -> str | None:
+    row = db.get(AppSetting, key)
+    return row.value if row else None
+
+
+def load_profiles(db: Session) -> tuple[list[dict], str]:
+    """返回 (模型配置列表, 当前启用名)。
+
+    多模型多API：每个 profile = {name, provider, base_url, api_key, model}。
+    若尚未配置过 profiles，则从旧单配置 / 环境变量合成一个“默认”，保证平滑升级。
+    """
+    raw = _get(db, "llm_profiles")
+    profiles: list[dict] = []
+    if raw:
+        try:
+            profiles = json.loads(raw)
+        except json.JSONDecodeError:
+            profiles = []
+    if not profiles:
+        profiles = [{
+            "name": "默认",
+            "provider": _get(db, "llm_provider") or settings.llm_provider,
+            "base_url": _get(db, "llm_base_url") or settings.llm_base_url,
+            "api_key": _get(db, "llm_api_key") or settings.llm_api_key,
+            "model": _get(db, "llm_model") or settings.llm_model,
+        }]
+    active = _get(db, "llm_active") or profiles[0]["name"]
+    if not any(p["name"] == active for p in profiles):
+        active = profiles[0]["name"]
+    return profiles, active
+
+
 def get_effective_config(db: Session) -> dict:
-    cfg = {
-        "llm_provider": settings.llm_provider,
-        "llm_base_url": settings.llm_base_url,
-        "llm_api_key": settings.llm_api_key,
-        "llm_model": settings.llm_model,
-        "intranet_only": settings.intranet_only,
+    """当前启用模型的有效配置。"""
+    profiles, active = load_profiles(db)
+    p = next((x for x in profiles if x["name"] == active), profiles[0])
+    intr = _get(db, "intranet_only")
+    intranet = intr.lower() in ("1", "true", "yes") if intr is not None else settings.intranet_only
+    return {
+        "llm_provider": p.get("provider", "mock"),
+        "llm_base_url": p.get("base_url", ""),
+        "llm_api_key": p.get("api_key", ""),
+        "llm_model": p.get("model", ""),
+        "intranet_only": intranet,
+        "active_name": active,
     }
-    for row in db.query(AppSetting).all():
-        if row.key in cfg:
-            if row.key == "intranet_only":
-                cfg[row.key] = row.value.lower() in ("1", "true", "yes")
-            else:
-                cfg[row.key] = row.value
-    return cfg
+
+
+def get_custom_guidance(db: Session) -> str:
+    """本单位自定义命题指引（非通用规则），由管理员在设置页填写或导入，
+    生成时追加到系统提示词之后。"""
+    return (_get(db, "custom_guidance") or "").strip()
 
 
 def _is_intranet(url: str) -> bool:
